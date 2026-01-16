@@ -32,7 +32,7 @@ def model_prediction(model, X_test,y_test):
 
 def save_metrics(metrics_dict):
 
-    with open ('metrics.json', 'w') as file:
+    with open ('./reports/metrics.json', 'w') as file:
         json.dump(metrics_dict, file, indent = 4)
 
 
