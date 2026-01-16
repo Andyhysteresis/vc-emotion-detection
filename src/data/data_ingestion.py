@@ -40,7 +40,7 @@ def save_data(data_path, train_data, test_data):
 
 def main():
     test_size = load_params('params.yaml')
-    df = read_data(r'D:/MLOps/SentimentAnalysis/sentiment_analysis_dataset.csv')
+    df = read_data(r'C:/MLOps/version_control_sentiment_analysis/sentiment_analysis_dataset.csv')
     final_df = process_data(df)
 
     train_data, test_data = train_test_split(final_df, test_size = test_size, random_state = 42)
