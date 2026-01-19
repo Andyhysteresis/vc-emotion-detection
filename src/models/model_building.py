@@ -16,8 +16,8 @@ def load_data(path):
     return df
 
 def split_data(df):
-    X_train = df.iloc[:, [2]]
-    y_train = df.iloc[:, [1]]
+    X_train = df.iloc[:, :-1].values
+    y_train = df.iloc[:, -1].values
     return X_train, y_train
 
 # Define and train the model
@@ -33,7 +33,7 @@ def model_save(model):
 
 def main():
     n_estimators, learning_rate = load_params('params.yaml')
-    train_data = load_data('./data/processed/train_bow.csv')
+    train_data = load_data('./data/processed/train_tfidf.csv')
     X_train, y_train = split_data(train_data)
     model = model_define(X_train, y_train, n_estimators, learning_rate)
     model_save(model)

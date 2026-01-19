@@ -74,9 +74,12 @@ def removing_numbers(text):
     return text
     
 def lower_case(text):
-    text = text.split()
-    text = [word.lower() for word in text]
-    return " ".join(text)
+    text = str(text)
+    if text == 'nan' or text.strip() == '':
+        return ''
+    
+    text = text.lower().strip()
+    return text
 
 def removing_punctuations(text):
     """Remove punctuations from the text."""
@@ -114,17 +117,17 @@ def remove_small_sentences(df):
 def transform_data(df):
     try:
 
-        df['content'] = df['content'].apply(lower_case)
+        df['text'] = df['text'].apply(lower_case)
         logger.debug('converted to lower case')
-        df['content'] = df['content'].apply(remove_stop_words)
+        df['text'] = df['text'].apply(remove_stop_words)
         logger.debug('removed stop words')
-        df['content'] = df['content'].apply(removing_numbers)
+        df['text'] = df['text'].apply(removing_numbers)
         logger.debug('removed numbers')
-        df['content'] = df['content'].apply(removing_punctuations)
+        df['text'] = df['text'].apply(removing_punctuations)
         logger.debug('removed punctuations')
-        df['content'] = df['content'].apply(removing_urls)
+        df['text'] = df['text'].apply(removing_urls)
         logger.debug('removed urls')
-        df['content'] = df['content'].apply(lemmatization)
+        df['text'] = df['text'].apply(lemmatization)
         logger.debug('performed lemmatization')
         return df
     except Exception as e:

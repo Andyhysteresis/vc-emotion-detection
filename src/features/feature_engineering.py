@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 import os
 import yaml
-from sklearn.feature_extraction.text import CountVectorizer
+from sklearn.feature_extraction.text import TfidfVectorizer
 import logging
 
 # configure logging
@@ -60,36 +60,36 @@ def load_data(path):
 def Vectorization(train_data: pd.DataFrame, test_data:pd.DataFrame, max_features: int)-> tuple:
     
     try:
-        # Apply Bag of Words
-        vectorizer = CountVectorizer(max_features = max_features)
+        # Apply TFIDF vectorizer
+        vectorizer = TfidfVectorizer(max_features = max_features)
         logger.debug('created Vectorizer object')
 
-        X_train = train_data['content'].values
+        X_train = train_data['text'].values
         logger.debug('Converted train_data in X_train numpy array values')
         y_train = train_data['sentiment'].values
         logger.debug('Converted train_data in y_train numpy array values')
 
-        X_test = test_data['content'].values
+        X_test = test_data['text'].values
         logger.debug('Converted test_data in X_test numpy array values')
         y_test = test_data['sentiment'].values
         logger.debug('Converted test_data in y_test numpy array values')
 
 
         #Fit the vectorizer onto the training data
-        X_train_bow = vectorizer.fit_transform(X_train)
+        X_train_tfidf = vectorizer.fit_transform(X_train)
         logger.debug('fitted and transformed the Vectorizer object on X_train')
 
         #Fit the vectorizer onto the test  data
-        X_test_bow = vectorizer.transform(X_test)
+        X_test_tfidf = vectorizer.transform(X_test)
         logger.debug('transformed the Vectorizer object on X_test')
 
         # Making the train_df
-        train_df = pd.DataFrame(X_train_bow.toarray(), columns=vectorizer.get_feature_names_out())
+        train_df = pd.DataFrame(X_train_tfidf.toarray(), columns=vectorizer.get_feature_names_out())
         train_df['label'] = y_train
         logger.debug('Applied Vectorizer and transformed the training data')
 
         # Making the test_df
-        test_df = pd.DataFrame(X_test_bow.toarray(), columns=vectorizer.get_feature_names_out())
+        test_df = pd.DataFrame(X_test_tfidf.toarray(), columns=vectorizer.get_feature_names_out())
         test_df['label'] = y_test
         logger.debug('Applied Vectorizer and transformed the test data')
 
@@ -104,8 +104,8 @@ def Vectorization(train_data: pd.DataFrame, test_data:pd.DataFrame, max_features
 def save_data(data_path, train_df, test_df):
     try:
         os.makedirs(data_path, exist_ok=True)
-        train_df.to_csv(os.path.join(data_path, 'train_bow.csv'))
-        test_df.to_csv(os.path.join(data_path, 'test_bow.csv'))
+        train_df.to_csv(os.path.join(data_path, 'train_tfidf.csv'))
+        test_df.to_csv(os.path.join(data_path, 'test_tfidf.csv'))
     except Exception as e:
         logger.error('Some unexpected error occurred during saving the file: %s', e)
         raise

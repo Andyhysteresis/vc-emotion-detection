@@ -68,10 +68,14 @@ def read_data(url: str) -> pd.DataFrame:
 def process_data(df: pd.DataFrame) -> pd.DataFrame:
 
     try:
-        df.drop(columns=['tweet_id'], inplace=True)
+        cols =['textID', 'selected_text', 'Time of Tweet',
+       'Age of User', 'Country', 'Population -2020', 'Land Area (Km²)',
+       'Density (P/Km²)']
+        df.drop(columns=cols, inplace=True)
         logger.debug('Droppeed the TWEET_ID columns for the analysis')
-        final_df = df[df['sentiment'].isin(['happiness', 'sadness'])]
-        final_df['sentiment'].replace({'happiness': 1, 'sadness': 0}, inplace=True)
+        # final_df = df[df['sentiment'].isin(['happiness', 'sadness'])]
+        # final_df['sentiment'].replace({'happiness': 1, 'sadness': 0}, inplace=True)
+        df['sentiment'] = df['sentiment'].replace({'positive': 1, 'neutral': 0, 'negative': -1})
         logger.debug('DataFrame is made and the sentiment values are replaced with numbers')
         
         return df
@@ -101,7 +105,7 @@ def save_data(data_path, train_data, test_data):
 def main():
     test_size = load_params('params.yaml')
     
-    df = read_data('https://raw.githubusercontent.com/campusx-official/jupyter-masterclass/main/tweet_emotions.csv')
+    df = read_data(r'C:/MLOps/version_control_sentiment_analysis/sentiment_analysis_dataset.csv')
     final_df = process_data(df)
 
     train_data, test_data = train_test_split(final_df, test_size = test_size, random_state = 42)

@@ -13,8 +13,8 @@ def load_data(test_path):
     return df
 
 def split_data(df):
-    X_test = df.iloc[:, [2]].values
-    y_test = df.iloc[:, [1]].values
+    X_test = df.iloc[:, :-1].values
+    y_test = df.iloc[:, -1].values
     return X_test, y_test
 
 
@@ -38,7 +38,7 @@ def save_metrics(metrics_dict):
 
 def main():
     model =load_model('./models/model.pkl', 'rb')
-    test_df = load_data('./data/processed/test_bow.csv')
+    test_df = load_data('./data/processed/test_tfidf.csv')
     X_test, y_test = split_data(test_df)
     metrics_dict = model_prediction(model, X_test, y_test)
     save_metrics(metrics_dict)
